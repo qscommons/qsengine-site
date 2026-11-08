@@ -1,10 +1,10 @@
 import { Children, cloneElement, isValidElement } from "react";
 import Link from "next/link";
 import { CodeBlock, Output } from "./app/components/Code";
-import { VERSION } from "./app/content";
 
 // How Markdown in the .mdx docs pages turns into the site's own elements.
-// CodeBlock, Output and <Version /> are available in every page without an import.
+// CodeBlock and Output are available in every page without an import; scripts/sync-docs.mjs
+// turns ```output blocks in docs/ into <Output />.
 
 // A fenced code block becomes a copyable CodeBlock. The trailing newline Markdown keeps is dropped.
 function Pre({ children }) {
@@ -39,7 +39,6 @@ const components = {
   tbody: Tbody,
   CodeBlock,
   Output,
-  Version: () => VERSION,
 };
 
 export function useMDXComponents(inherited) {

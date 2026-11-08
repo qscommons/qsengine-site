@@ -33,16 +33,3 @@ export function Output({ printed, rows = [], caption }) {
     </div>
   );
 }
-
-// One full example: a sentence, the code, its output.
-export function Example({ ex, headingLevel = 2 }) {
-  const H = `h${headingLevel}`;
-  return (
-    <section className="example" id={ex.id}>
-      <H>{ex.name}</H>
-      <p>{ex.intro}</p>
-      <CodeBlock code={ex.code} label={`Copy the ${ex.name} example`} />
-      <Output printed={ex.printed} rows={ex.rows} caption={ex.caption} />
-    </section>
-  );
-}

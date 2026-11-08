@@ -245,9 +245,6 @@ p, li, dd { text-wrap: pretty; }
 .prose :not(pre) > code { background: var(--tint); padding: 0.1em 0.35em; }
 .prose .codeblock + .output { margin-top: -18px; }
 
-.example { display: grid; gap: 14px; margin-top: 20px; }
-.example h2 { margin-top: 12px; }
-.example .codeblock + .output { margin-top: -14px; }
 
 /* Docs index: groups as columns of links with a line each, like a library index. */
 .index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px var(--gap); margin-top: 12px; }
@@ -269,22 +266,7 @@ tbody tr:nth-child(odd) { background: var(--tint); }
 tbody th { font-weight: 500; }
 table code { font-size: 0.85em; overflow-wrap: anywhere; }
 .prose table :not(pre) > code { background: none; padding: 0; }
-.numbers td, .numbers th { font-variant-numeric: tabular-nums; }
-.numbers td { text-align: right; }
-.numbers thead th:not(:first-child) { text-align: right; }
-
-/* API: signature, then what it does. */
-.api { display: grid; gap: 6px; }
-.api > div { padding: 14px 18px; }
-.api > div:nth-child(odd) { background: var(--tint); }
-.api dt code { font-size: var(--step-body); font-weight: 500; }
-.prose .api dt code { background: none; padding: 0; }
-.api dd { margin-top: 4px; display: grid; gap: 2px; }
-.api__returns { color: var(--soft); font-size: var(--step-small); }
-
-/* FAQ */
-.faq { display: grid; gap: 22px; }
-.faq dt { font-weight: 700; }
+.prose td, .prose tbody th { font-variant-numeric: tabular-nums; }
 
 /* Previous / next */
 .prevnext { max-width: var(--measure); margin-top: 56px; display: flex; justify-content: space-between; gap: var(--gap); }

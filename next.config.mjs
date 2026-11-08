@@ -7,9 +7,11 @@ const basePath = process.env.BASE_PATH || "";
 // `version` in Cargo.toml (the same number pip installs) updates every page.
 import { readFileSync } from "node:fs";
 import createMDX from "@next/mdx";
-const cargo = readFileSync(new URL("../Cargo.toml", import.meta.url), "utf8");
+// QSENGINE_ROOT is the qsengine checkout the docs are built from (see scripts/sync-docs.mjs).
+const root = new URL(`${process.env.QSENGINE_ROOT || ".."}/`, new URL("./", import.meta.url));
+const cargo = readFileSync(new URL("Cargo.toml", root), "utf8");
 const version = cargo.match(/^version\s*=\s*"([^"]+)"/m)?.[1];
-if (!version) throw new Error("could not read version from ../Cargo.toml");
+if (!version) throw new Error("could not read version from Cargo.toml");
 
 // Docs pages are MDX: Markdown with $maths$ (KaTeX, rendered at build time) and
 // GitHub-style tables. Plugins are named as strings because Turbopack needs
