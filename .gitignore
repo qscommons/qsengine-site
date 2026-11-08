@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+# The qsengine checkout the workflow builds from (QSENGINE_ROOT=engine)
+engine/
+# Generated from qsengine's docs/ by scripts/sync-docs.mjs
+app/docs/*/
+app/docs-nav.json
+.DS_Store
+.claude/

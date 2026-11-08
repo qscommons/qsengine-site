@@ -1,4 +1,4 @@
-// Turns the Markdown documentation in the repository's docs/ folder into site pages.
+// Turns the Markdown documentation in qsengine's docs/ folder into site pages.
 //
 //   docs/README.md          the contents: `## Group` headings and `- [Title](page.md): blurb` lines,
 //                           in reading order. It drives the sidebar, the /docs index and the home page.
@@ -8,8 +8,9 @@
 // Both are generated: edit docs/, never the output. Run with --watch to regenerate on every change,
 // and add `-- <command>` to run a command (the dev server) alongside.
 //
-// QSENGINE_ROOT points at the qsengine checkout (default: the folder above site/), so the site
-// can later build from a separate clone of the engine repository without changing this script.
+// QSENGINE_ROOT points at the qsengine checkout. The default, ../qsengine, is a clone of
+// qscommons/qsengine next to this repository; the workflow checks the engine out into engine/.
+// QSENGINE_REF is the engine branch or tag being built, used for links to files in that repository.
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, statSync, watch } from "node:fs";
 import path from "node:path";
@@ -17,7 +18,8 @@ import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
 const SITE_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const ROOT = path.resolve(SITE_DIR, process.env.QSENGINE_ROOT || "..");
+const ROOT = path.resolve(SITE_DIR, process.env.QSENGINE_ROOT || "../qsengine");
+const REF = process.env.QSENGINE_REF || "main";
 const DOCS_DIR = path.join(ROOT, "docs");
 const OUT_DIR = path.join(SITE_DIR, "app", "docs");
 const NAV_FILE = path.join(SITE_DIR, "app", "docs-nav.json");
@@ -73,7 +75,7 @@ function rewriteLink(target, fromRel, repo, file) {
   }
   if (abs.startsWith("..")) fail(file, `link leaves the repository: ${target}`);
   const kind = p.endsWith("/") ? "tree" : "blob";
-  return `${repo}/${kind}/main/${abs.replace(/\/$/, "")}${hash ? `#${hash}` : ""}`;
+  return `${repo}/${kind}/${REF}/${abs.replace(/\/$/, "")}${hash ? `#${hash}` : ""}`;
 }
 
 // Plain-Markdown text is not always valid MDX: `{`, `}` and a bare `<` mean code there.

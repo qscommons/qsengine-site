@@ -1,0 +1,93 @@
+# Builds the qsengine documentation site and publishes it to GitHub Pages
+# (served at qsengine.kaiwave.dev through public/CNAME).
+#
+# The pages come from the docs/ folder of qscommons/qsengine, at its latest release, so the
+# site describes the version `pip install qsengine` gives you. A release without a docs/
+# folder (anything before docs moved there) falls back to the engine's main branch.
+#
+# Runs on every push to main, once a day to pick up new engine releases, and on demand.
+# A manual run can build from any engine ref, for example `main` to publish a docs fix early.
+
+name: Website
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 5 * * *" # daily, 05:17 UTC
+  workflow_dispatch:
+    inputs:
+      engine_ref:
+        description: "qsengine branch, tag or commit to build from (empty: latest release)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; a newer run cancels an older one still waiting.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  ENGINE_REPO: qscommons/qsengine
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Choose the engine version
+        id: engine
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED: ${{ inputs.engine_ref }}
+        run: |
+          ref="$REQUESTED"
+          if [ -z "$ref" ]; then
+            ref=$(gh release view --repo "$ENGINE_REPO" --json tagName --jq .tagName)
+            # Releases from before the docs/ folder existed have nothing to build.
+            if ! gh api "repos/$ENGINE_REPO/contents/docs/README.md?ref=$ref" --silent 2>/dev/null; then
+              echo "::notice::$ref has no docs/ folder; building from main"
+              ref=main
+            fi
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "Building from $ENGINE_REPO at $ref" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/checkout@v6
+        with:
+          repository: ${{ env.ENGINE_REPO }}
+          ref: ${{ steps.engine.outputs.ref }}
+          path: engine
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Build
+        env:
+          QSENGINE_ROOT: engine
+          QSENGINE_REF: ${{ steps.engine.outputs.ref }}
+        run: |
+          npm ci
+          npm run build
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

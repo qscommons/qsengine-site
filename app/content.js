@@ -1,5 +1,5 @@
 // Everything the site says about qsengine, in one place.
-// The documentation itself is the Markdown in the repository's docs/ folder; see scripts/sync-docs.mjs.
+// The documentation itself is the Markdown in the docs/ folder of qscommons/qsengine; see scripts/sync-docs.mjs.
 
 import DOCS_NAV from "./docs-nav.json";
 

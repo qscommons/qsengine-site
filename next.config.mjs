@@ -8,7 +8,7 @@ const basePath = process.env.BASE_PATH || "";
 import { readFileSync } from "node:fs";
 import createMDX from "@next/mdx";
 // QSENGINE_ROOT is the qsengine checkout the docs are built from (see scripts/sync-docs.mjs).
-const root = new URL(`${process.env.QSENGINE_ROOT || ".."}/`, new URL("./", import.meta.url));
+const root = new URL(`${process.env.QSENGINE_ROOT || "../qsengine"}/`, new URL("./", import.meta.url));
 const cargo = readFileSync(new URL("Cargo.toml", root), "utf8");
 const version = cargo.match(/^version\s*=\s*"([^"]+)"/m)?.[1];
 if (!version) throw new Error("could not read version from Cargo.toml");
