@@ -1,6 +1,6 @@
 // Static export for GitHub Pages, served from the custom domain in public/CNAME,
 // so pages live at the root. Set BASE_PATH=/qsengine only if the site is ever
-// served from kaiwave.github.io/qsengine/ instead.
+// served from qscommons.github.io/qsengine/ instead.
 const basePath = process.env.BASE_PATH || "";
 
 // The version shown on the site is read from the crate at build time, so bumping
