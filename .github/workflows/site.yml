@@ -1,8 +1,8 @@
 # Builds the qsengine documentation site and publishes it to GitHub Pages
 # (served at qsengine.kaiwave.dev through public/CNAME).
 #
-# The pages come from the docs/ folder of qscommons/qsengine, at its latest release, so the
-# site describes the version `pip install qsengine` gives you. A release without a docs/
+# The pages come from the docs/ folder of qscommons/qsengine, at its newest v* release tag, so
+# the site describes the version `pip install qsengine` gives you. A tag without a docs/
 # folder (anything before docs moved there) falls back to the engine's main branch.
 #
 # Runs on every push to main, once a day to pick up new engine releases, and on demand.
@@ -41,29 +41,29 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Choose the engine version
+      # The newest v* tag of the engine, unless a manual run names a ref. A tag from before
+      # the docs/ folder existed has nothing to build, so fall back to main.
+      - name: Check out the engine
         id: engine
         env:
-          GH_TOKEN: ${{ github.token }}
           REQUESTED: ${{ inputs.engine_ref }}
         run: |
+          url="https://github.com/$ENGINE_REPO.git"
           ref="$REQUESTED"
           if [ -z "$ref" ]; then
-            ref=$(gh release view --repo "$ENGINE_REPO" --json tagName --jq .tagName)
-            # Releases from before the docs/ folder existed have nothing to build.
-            if ! gh api "repos/$ENGINE_REPO/contents/docs/README.md?ref=$ref" --silent 2>/dev/null; then
-              echo "::notice::$ref has no docs/ folder; building from main"
-              ref=main
-            fi
+            ref=$(git ls-remote --tags --refs "$url" 'v*' | sed 's#.*refs/tags/##' | sort -V | tail -n 1)
+          fi
+          git init -q engine
+          git -C engine fetch -q --depth 1 "$url" "$ref"
+          git -C engine checkout -q FETCH_HEAD
+          if [ -z "$REQUESTED" ] && [ ! -f engine/docs/README.md ]; then
+            echo "::notice::$ref has no docs/ folder; building from main"
+            ref=main
+            git -C engine fetch -q --depth 1 "$url" main
+            git -C engine checkout -q FETCH_HEAD
           fi
           echo "ref=$ref" >> "$GITHUB_OUTPUT"
-          echo "Building from $ENGINE_REPO at $ref" >> "$GITHUB_STEP_SUMMARY"
-
-      - uses: actions/checkout@v6
-        with:
-          repository: ${{ env.ENGINE_REPO }}
-          ref: ${{ steps.engine.outputs.ref }}
-          path: engine
+          echo "Built from $ENGINE_REPO at $ref ($(git -C engine rev-parse --short HEAD))" >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/setup-node@v4
         with:
