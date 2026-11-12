@@ -1,5 +1,5 @@
 # Builds the qsengine documentation site and publishes it to GitHub Pages
-# (served at qsengine.kaiwave.dev through public/CNAME).
+# (served at qsengine.qscommons.org; set as the custom domain in the repository's Pages settings).
 #
 # The pages come from the docs/ folder of qscommons/qsengine, at its newest v* release tag, so
 # the site describes the version `pip install qsengine` gives you. A tag without a docs/
