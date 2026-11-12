@@ -1,6 +1,6 @@
 # qsengine-site
 
-The website for [qsengine](https://github.com/qscommons/qsengine), published at [qsengine.kaiwave.dev](https://qsengine.kaiwave.dev).
+The website for [qsengine](https://github.com/qscommons/qsengine), published at [qsengine.qscommons.org/docs](https://qsengine.qscommons.org/docs/). qsengine's home page is [its project page on qscommons.org](https://qscommons.org/projects/qsengine/); `/` on this site redirects there.
 
 This repository holds only the site: layout, navigation, styling and the build. The documentation itself is Markdown in the [docs/ folder of qsengine](https://github.com/qscommons/qsengine/tree/main/docs), so it changes in the same pull requests as the code. To fix or add a page, edit it there; [docs/README.md](https://github.com/qscommons/qsengine/blob/main/docs/README.md) explains how pages are written.
 

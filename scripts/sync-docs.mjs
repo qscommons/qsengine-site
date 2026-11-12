@@ -1,7 +1,7 @@
 // Turns the Markdown documentation in qsengine's docs/ folder into site pages.
 //
 //   docs/README.md          the contents: `## Group` headings and `- [Title](page.md): blurb` lines,
-//                           in reading order. It drives the sidebar, the /docs index and the home page.
+//                           in reading order. It drives the sidebar and the /docs index.
 //   docs/<page>.md          one page each, written as plain GitHub Markdown (see docs/README.md).
 //
 // Each page becomes app/docs/<page>/page.mdx and the contents become app/docs-nav.json.
@@ -159,7 +159,6 @@ function readContents(ctx, pages) {
       href: hrefOf(rel),
       title: it[1],
       blurb: (it[3] ?? "").trim(),
-      ...(pages.get(rel).home && { key: true }),
     });
     pages.get(rel).listed = true;
   }

@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
         <SiteHeader />
         {children}
         <footer className="foot">
-          <p>qsengine {VERSION} by <a href="https://kaiwave.dev">kaiwave</a>, MIT licence.</p>
+          <p>qsengine {VERSION} by <a href="https://qscommons.org">qscommons</a>, MIT licence.</p>
           <ul>
             <li><Link href="/docs/">Documentation</Link></li>
             <li><a href={REPO}>Source on GitHub</a></li>

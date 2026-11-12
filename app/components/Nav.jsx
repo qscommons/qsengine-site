@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { DOCS, REPO, VERSION } from "../content";
+import { DOCS, HOME, REPO, VERSION } from "../content";
 
 // "/docs/gates" and "/docs/gates/" are the same page.
 const norm = (p) => (p || "/").replace(/\/+$/, "") || "/";
@@ -18,7 +18,7 @@ export function SiteHeader() {
   ];
   return (
     <header className="bar">
-      <Link className="bar__mark" href="/">qsengine <span className="bar__version">{VERSION}</span></Link>
+      <a className="bar__mark" href={HOME}>qsengine <span className="bar__version">{VERSION}</span></a>
       <nav aria-label="Main">
         <ul className="bar__links">
           {links.map(([href, label]) => (
